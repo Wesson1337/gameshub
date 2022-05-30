@@ -1,3 +1,6 @@
+import time
+
+
 def is_valid(text, alphabet):
     for i in text:
         if i not in alphabet and i.isalpha():
@@ -5,7 +8,7 @@ def is_valid(text, alphabet):
     return True
 
 
-class VigenereCipher(object):
+class VigenereCipher:
     """Class for decoding and encoding words into Vigenere cipher. It takes two argument: \
 the first is a key and second is arbitrary alphabet. Funcs take one argument - text, \
 which you want encode/decode, return encoded/decoded text. """
@@ -13,48 +16,59 @@ which you want encode/decode, return encoded/decoded text. """
     def __init__(self, key, alphabet):
         self.key = key
         self.alphabet = alphabet
-        self.alphabet_dict = {j: k for k, j in enumerate(self.alphabet)}
-        self.alphabet_dict_reverse = {k: j for k, j in enumerate(self.alphabet)}
 
     def encode(self, text):
-        if not is_valid(text, self.alphabet):
-            return text
-        encode_key = (self.key * len(text))[:len(text)]
-        s = ''
-        lst = []
-        for i, j in zip(text, encode_key):
-            if i.isalpha():
-                lst.append((self.alphabet_dict[i] + self.alphabet_dict[j]) % len(self.alphabet))
-            else:
-                lst.append(i)
-        for i in lst:
-            if str(i).isdigit():
-                s += self.alphabet_dict_reverse[i]
-            else:
-                s += i
-        return s
+        encrypted = []
+        alphabet = self.alphabet
+        key = self.key
+        alphabet_len = len(alphabet)
+        key_len = len(key)
+        for i, char in enumerate(text):
+            encrypted.append(alphabet[(alphabet.index(char) + alphabet.index(
+                key[i % key_len])) % alphabet_len] if char in alphabet else char)
+        return ''.join(encrypted)
 
     def decode(self, text):
-        if not is_valid(text, self.alphabet):
-            return text
-        encode_key = (self.key * len(text))[:len(text)]
-        s = ''
-        lst = []
-        for i, j in zip(text, encode_key):
-            if i.isalpha():
-                x = self.alphabet_dict[i] - self.alphabet_dict[j]
-                if x < 0:
-                    x += len(self.alphabet)
-                lst.append(x)
-            else:
-                lst.append(i)
-        for i in lst:
-            if str(i).isdigit():
-                s += self.alphabet_dict_reverse[i]
-            else:
-                s += i
-        return s
+        encrypted = []
+        key = self.key
+        key_len = len(key)
+        alphabet = self.alphabet
+        for i, char in enumerate(text):
+            encrypted.append(
+                alphabet[(alphabet.index(char) - alphabet.index(key[i % key_len]))] if char in alphabet else char)
+        return ''.join(encrypted)
 
 
-if __name__ == '__main__':
-    print(VigenereCipher.__doc__)
+def use_vcipher():
+    prev_key = 'pizza'
+    prev_alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    while True:
+        print('If you want quit, enter "quit".')
+        time.sleep(0.2)
+        new_key = input('Enter a new key or leave the existing one by entering "skip" (Default key - pizza): ').lower()
+        new_alphabet = input('Enter a new alphabet or leave the existing one by entering "skip" (Default alphabet - '
+                             'English): ').lower()
+        if new_key == 'quit' or new_alphabet == 'quit':
+            return None
+        if new_key == 'skip' or new_key == '':
+            new_key = prev_key
+        if new_alphabet == 'skip' or new_alphabet == '':
+            new_alphabet = prev_alphabet
+        prev_key, prev_alphabet = new_key, new_alphabet
+        new_cipher = VigenereCipher(new_key, new_alphabet)
+        while True:
+            message = input('Enter the message you want to decode or encode: ').lower()
+            if not is_valid(message, new_alphabet):
+                print(f'Message not in alphabet, current alphabet: "{new_alphabet}"')
+                continue
+            break
+        while True:
+            answer = input('Enter what you want: "decode" or "encode": ').lower()
+            if answer == 'decode':
+                print(f"Your decoded message: {new_cipher.decode(message)}")
+                break
+            if answer == 'encode':
+                print(f"Your encoded message: {new_cipher.encode(message)}")
+                break
+            else:
+                print("I don't understand you :(")

@@ -1,6 +1,8 @@
 """Easy hangman game. This is my very first game, don't judge strictly)
 Hangman rules: https://www.wikihow.com/Play-Hangman
 v.1: Slightly improved the game by adding random word generation using the API"""
+import time
+
 import requests
 
 
@@ -78,6 +80,24 @@ def display_hangman(tries):
            |      
            |     
            -
+        ''',
+        '''
+        
+           |      
+           |      
+           |      
+           |      
+           |     
+           -
+        ''',
+        '''
+
+
+
+
+      
+
+
         '''
     ]
     return stages[tries]
@@ -88,7 +108,14 @@ def play(word):
     word_completion = ''.join(word_completion_list)
     guessed_letters = []
     guessed_words = []
-    tries = 6
+    while True:
+        tries = input('Enter the number of attempts (up to 8): ')
+        if tries.isdigit() and 8 >= int(tries) >= 1:
+            tries = int(tries)
+            break
+        else:
+            print('Enter the number from 1 to 8.')
+            time.sleep(0.2)
     print('Lets play hangman!')
     print('Condition at the moment:')
     print(display_hangman(tries))

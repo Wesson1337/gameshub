@@ -1,7 +1,10 @@
 """Converts number of seconds to human representation without any unnecessary words \
 and with 's' at the end for plural date."""
-def format_duration(seconds):
 
+import time
+
+
+def format_duration(seconds):
     diction = {'year': seconds // (86400 * 365), 'day': seconds // 86400 % 365,
                'hour': seconds // 3600 % 24, 'minute': seconds // 60 % 60,
                'second': seconds % 60}
@@ -22,7 +25,11 @@ def format_duration(seconds):
 
 def enter_format_duration():
     while True:
+        print('If you want quit, enter "quit".')
+        time.sleep(0.2)
         x = input('Please, enter number of seconds: ')
+        if x == 'quit':
+            return None
         if x.isdigit():
             print(f'Formatted date: {format_duration(int(x))}')
         else:

@@ -2,6 +2,7 @@
 to gain exp and increase warrior level/rank use 'self.training' to train your warrior or use 'self.battle' to fight. \
 Has taken from https://www.codewars.com/kata/5941c545f5c394fef900000c."""
 
+
 class Warrior:
 
     def __init__(self):
@@ -52,5 +53,5 @@ class Warrior:
         return "Invalid level"
 
 
-if __name__ == '__main__':
-    print(Warrior().__doc__)
+def play_great_warrior():
+    Warrior()
