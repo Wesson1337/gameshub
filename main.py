@@ -5,12 +5,14 @@ import thegreatestwarrior
 import VigenereCipher
 import time
 import datetime
+import snake
 
 
 class Welcomer:
     def __init__(self):
         self.dict_of_games = {'Hangman': hangman.play_hangman,
-                              'The great warrior': thegreatestwarrior.play_great_warrior}
+                              'The great warrior': thegreatestwarrior.play_great_warrior,
+                              'Snake': snake.play_snake}
         self.dict_of_utils = {'Vigenere cipher': VigenereCipher.use_vcipher,
                               'Seconds to human': format_sec.enter_format_duration}
         self.count_welcome = 0
@@ -85,5 +87,6 @@ class Welcomer:
                 print("I don't understand you :(")
 
 
-x = Welcomer()
-x.start_program()
+if __name__ == '__main__':
+    x = Welcomer()
+    x.start_program()

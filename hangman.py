@@ -114,7 +114,7 @@ def play(word):
             tries = int(tries)
             break
         else:
-            print('Enter the number from 1 to 8.')
+            print('Enter a number from 1 to 8.')
             time.sleep(0.2)
     print('Lets play hangman!')
     print('Condition at the moment:')
