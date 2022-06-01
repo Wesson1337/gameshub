@@ -15,10 +15,12 @@ self.dict_of_utils = {'Vigenere cipher': VigenereCipher.use_vcipher,
 + snake
 + hangman
 
-#### And two utilities:
+#### And three utilities:
 + Vigener cipher
 + Seconds to human
++ Roman numerals
 
+#### To run program just run main.py
 ___
 P.S. This is my very first project, and I think in the future I will be ashamed of it :)
 
