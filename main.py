@@ -1,7 +1,6 @@
 """Entrance of the program"""
 import hangman
 import format_sec
-import thegreatestwarrior
 import VigenereCipher
 import time
 import datetime
@@ -11,15 +10,14 @@ import snake
 class Welcomer:
     def __init__(self):
         self.dict_of_games = {'Hangman': hangman.play_hangman,
-                              'The great warrior': thegreatestwarrior.play_great_warrior,
                               'Snake': snake.play_snake}
         self.dict_of_utils = {'Vigenere cipher': VigenereCipher.use_vcipher,
                               'Seconds to human': format_sec.enter_format_duration}
-        self.count_welcome = 0
+        self.welcome_count = 0
         self.start_datetime = datetime.datetime.now()
 
     def _welcome_anim(self):
-        if self.count_welcome == 0:
+        if self.welcome_count == 0:
             s = '''----------------------------------------------------------------------
 ---                                                                ---
 ---                                                                ---
@@ -88,5 +86,4 @@ class Welcomer:
 
 
 if __name__ == '__main__':
-    x = Welcomer()
-    x.start_program()
+    Welcomer().start_program()

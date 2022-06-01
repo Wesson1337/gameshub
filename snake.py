@@ -5,17 +5,24 @@ from pygame.color import THECOLORS
 
 
 def play_snake(continue_game=True):
+    print("It's a simple snake game, use arrow-buttons to move, else you can increase your speed by pressing '+' or "
+          "'-'.")
+    time.sleep(5)
     pygame.init()
     dis = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Snake game by Wesson')
 
     def message(text, color):
-        font_style = pygame.font.SysFont('centurygothic', 30, True)
+        font_style = pygame.font.Font('font/centurygothic_bold.ttf', 20)
         return font_style.render(text, True, color)
 
     def your_score(score):
-        value = pygame.font.SysFont('centurygothic', 20).render("Score: " + str(score), True, THECOLORS['green2'])
+        value = pygame.font.Font('font/centurygothic.ttf', 20).render("Score: " + str(score), True, THECOLORS['green2'])
         dis.blit(value, [10, 0])
+
+    def our_snake(snake_block, snake_list):
+        for i in snake_list:
+            pygame.draw.rect(dis, THECOLORS['blue'], [i[0], i[1], snake_block, snake_block])
 
     def game_loop():
         nonlocal continue_game
@@ -23,6 +30,10 @@ def play_snake(continue_game=True):
         game_close = False
         clock = pygame.time.Clock()
         continue_game = True
+
+        change_to = 'STAY'
+        direction = 'STAY'
+        snake_speed = 30
 
         x1, y1 = 400, 300
         x1_change, y1_change = 0, 0
@@ -33,16 +44,12 @@ def play_snake(continue_game=True):
         snake_list = []
         length_of_snake = 1
 
-        def our_snake(snake_block, snake_list):
-            for i in snake_list:
-                pygame.draw.rect(dis, THECOLORS['blue'], [i[0], i[1], snake_block, snake_block])
-
         while running:
 
             while game_close:
                 dis.fill(THECOLORS['grey11'])
-                dis.blit(message('Game over!', THECOLORS['red2']), [310, 240])
-                dis.blit(message('Press "C" to play again or press "Q" to quit', THECOLORS['red2']), [110, 275])
+                dis.blit(message('Game over!', THECOLORS['red2']), [340, 255])
+                dis.blit(message('Press "C" to play again or press "Q" to quit', THECOLORS['red2']), [190, 285])
                 your_score(length_of_snake - 1)
                 pygame.display.update()
 
@@ -58,7 +65,7 @@ def play_snake(continue_game=True):
                             continue_game = False
                         if event.key == pygame.K_c:
                             dis.fill(THECOLORS['grey11'])
-                            dis.blit(message('Starting new game...', THECOLORS['red2']), [260, 268])
+                            dis.blit(message('Starting new game...', THECOLORS['red2']), [300, 275])
                             pygame.display.update()
                             time.sleep(2)
                             continue_game = True
@@ -66,21 +73,46 @@ def play_snake(continue_game=True):
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
                     continue_game = False
+                    return None
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT and x1_change != 10:
-                        x1_change = -10
-                        y1_change = 0
-                    elif event.key == pygame.K_RIGHT and x1_change != -10:
-                        x1_change = 10
-                        y1_change = 0
-                    elif event.key == pygame.K_DOWN and y1_change != -10:
-                        x1_change = 0
-                        y1_change = 10
-                    elif event.key == pygame.K_UP and y1_change != 10:
-                        x1_change = 0
-                        y1_change = -10
+                    if event.key == pygame.K_UP:
+                        change_to = 'UP'
+                    if event.key == pygame.K_DOWN:
+                        change_to = 'DOWN'
+                    if event.key == pygame.K_LEFT:
+                        change_to = 'LEFT'
+                    if event.key == pygame.K_RIGHT:
+                        change_to = 'RIGHT'
+                    if event.key == pygame.K_EQUALS:
+                        if snake_speed + 4 <= 60:
+                            snake_speed += 4
+                    if event.key == pygame.K_MINUS:
+                        if snake_speed - 4 >= 0:
+                            snake_speed -= 4
+
+            if change_to == 'UP' and direction != 'DOWN':
+                direction = 'UP'
+            if change_to == 'DOWN' and direction != 'UP':
+                direction = 'DOWN'
+            if change_to == 'LEFT' and direction != 'RIGHT':
+                direction = 'LEFT'
+            if change_to == 'RIGHT' and direction != 'LEFT':
+                direction = 'RIGHT'
+
+            if direction == 'UP':
+                x1_change = 0
+                y1_change = -10
+            if direction == 'DOWN':
+                x1_change = 0
+                y1_change = 10
+            if direction == 'LEFT':
+                x1_change = -10
+                y1_change = 0
+            if direction == 'RIGHT':
+                x1_change = 10
+                y1_change = 0
+
             if x1 >= 800 or x1 < 0 or y1 >= 600 or y1 < 0:
                 game_close = True
 
@@ -109,7 +141,7 @@ def play_snake(continue_game=True):
                 food_y = round(random.randrange(0, 590) / 10.0) * 10.0
                 length_of_snake += 1
 
-            clock.tick(15)  # snake speed
+            clock.tick(snake_speed)  # snake speed
 
     while continue_game:
         game_loop()

@@ -1,3 +1,7 @@
+"""Decoding and encoding words into Vigenere cipher. It takes two argument:
+the first is a key and second is arbitrary alphabet. Funcs take one argument - text,
+which you want to encode/decode, return encoded/decoded text. """
+
 import time
 
 
@@ -9,9 +13,6 @@ def is_valid(text, alphabet):
 
 
 class VigenereCipher:
-    """Class for decoding and encoding words into Vigenere cipher. It takes two argument: \
-the first is a key and second is arbitrary alphabet. Funcs take one argument - text, \
-which you want encode/decode, return encoded/decoded text. """
 
     def __init__(self, key, alphabet):
         self.key = key
