@@ -5,6 +5,7 @@ import VigenereCipher
 import time
 import datetime
 import snake
+import roman
 
 
 class Welcomer:
@@ -12,7 +13,8 @@ class Welcomer:
         self.dict_of_games = {'Hangman': hangman.play_hangman,
                               'Snake': snake.play_snake}
         self.dict_of_utils = {'Vigenere cipher': VigenereCipher.use_vcipher,
-                              'Seconds to human': format_sec.enter_format_duration}
+                              'Seconds to human': format_sec.enter_format_duration,
+                              'Roman numerals': roman.start_roman}
         self.welcome_count = 0
         self.start_datetime = datetime.datetime.now()
 
