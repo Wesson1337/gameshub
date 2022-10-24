@@ -3,13 +3,18 @@ import time
 import pygame
 from pygame.color import THECOLORS
 
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+
+SNAKE_SPEED = 30
+
 
 def play_snake(continue_game=True):
     print("It's a simple snake game, use arrow-buttons to move, else you can increase your speed by pressing '+' or "
           "'-'.")
     time.sleep(5)
     pygame.init()
-    dis = pygame.display.set_mode((800, 600))
+    dis = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Snake game by Wesson')
 
     def message(text, color):
@@ -24,6 +29,17 @@ def play_snake(continue_game=True):
         for i in snake_list:
             pygame.draw.rect(dis, THECOLORS['blue'], [i[0], i[1], snake_block, snake_block])
 
+    def get_food_coordinates() -> tuple[float, float]:
+        food_x = round(random.randrange(1, WINDOW_WIDTH - 10) / 10.0) * 10.0
+        food_y = round(random.randrange(1, WINDOW_HEIGHT - 10) / 10.0) * 10.0
+        return food_x, food_y
+
+    def is_food_inside_snake(snake_list: list[list[int, int]], food_x: float, food_y: float) -> bool:
+        for snake_block in snake_list:
+            if snake_block[0] == food_x and snake_block[1] == food_y:
+                return True
+        return False
+
     def game_loop():
         nonlocal continue_game
         running = True
@@ -33,13 +49,12 @@ def play_snake(continue_game=True):
 
         change_to = 'STAY'
         direction = 'STAY'
-        snake_speed = 30
+        snake_speed = SNAKE_SPEED
 
-        x1, y1 = 400, 300
+        x1, y1 = WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2
         x1_change, y1_change = 0, 0
 
-        food_x = round(random.randrange(1, 790) / 10.0) * 10.0
-        food_y = round(random.randrange(1, 590) / 10.0) * 10.0
+        food_x, food_y = get_food_coordinates()
 
         snake_list = []
         length_of_snake = 1
@@ -113,7 +128,7 @@ def play_snake(continue_game=True):
                 x1_change = 10
                 y1_change = 0
 
-            if x1 >= 800 or x1 < 0 or y1 >= 600 or y1 < 0:
+            if x1 >= WINDOW_WIDTH or x1 < 0 or y1 >= WINDOW_HEIGHT or y1 < 0:
                 game_close = True
 
             x1 += x1_change
@@ -137,9 +152,14 @@ def play_snake(continue_game=True):
             pygame.display.update()
 
             if x1 == food_x and y1 == food_y:
-                food_x = round(random.randrange(0, 790) / 10.0) * 10.0
-                food_y = round(random.randrange(0, 590) / 10.0) * 10.0
+                food_x, food_y = get_food_coordinates()
                 length_of_snake += 1
+                while True:
+                    if is_food_inside_snake(snake_list, food_x, food_y):
+                        food_x, food_y = get_food_coordinates()
+                        length_of_snake += 1
+                        continue
+                    break
 
             clock.tick(snake_speed)  # snake speed
 
